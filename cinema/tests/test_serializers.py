@@ -18,6 +18,12 @@ class MovieSerializerTest(TestCase):
             "duration": None
         }
 
+        self.empty_description = {
+            "title": "Test_title",
+            "description": "",
+            "duration": 150
+        }
+
         self.movie = Movie.objects.create(**self.valid_data)
 
     def test_valid_data_is_valid(self):
@@ -30,6 +36,11 @@ class MovieSerializerTest(TestCase):
         self.assertFalse(serializer.is_valid())
         self.assertIn("title", serializer.errors)
         self.assertIn("duration", serializer.errors)
+
+    def test_empty_description(self):
+        serializer = MovieSerializer(data=self.empty_description)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("description", serializer.errors)
 
     def test_serializer_output_fields(self):
         serializer = MovieSerializer(self.movie)
